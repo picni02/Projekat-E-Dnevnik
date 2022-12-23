@@ -1,0 +1,17 @@
+#pragma once
+
+class Predmet {
+private:
+	char nazivPredmeta[20];
+	int ocjena;
+public:
+	Predmet();
+	Predmet(const Predmet& predmet);
+	void setNazivPredmeta();
+	void setOcjena();
+	char* getNazivPredmeta();
+	int getOcjena();
+	friend istream& operator>>(istream& stream, Predmet& predmet);
+	friend ostream& operator<<(ostream& stream, Predmet& predmet);
+	~Predmet() = default;
+};

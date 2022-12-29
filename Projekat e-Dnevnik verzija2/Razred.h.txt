@@ -1,0 +1,43 @@
+#pragma once
+#include "Ucenik.h"
+#include "Razrednik.h"
+#include "Roditelj.h"
+#include <vector>
+using namespace std;
+
+class Razred {
+private:
+	string nazivRazreda;
+	string pomNazivRazreda = nazivRazreda + ".txt";
+	vector<Ucenik> ucenici;
+	vector<Roditelj> roditelji;
+	Razrednik razrednik;
+	static int brojUcenika;
+	int kapacitetRazreda;
+	int idRazrednika;
+public:
+	Razred();
+	void setNazivRazreda(string nazivRazreda);
+	void setKapacitetRazreda(int brojUcenika);
+	void setIdRazrednika();
+	void dodajUcenikauRazred(Ucenik& ucenik);
+	void dodajRoditelja(Roditelj& roditelj);
+	void ispisRazreda();
+	void izbrisiUcenikaIzRazreda();
+	void setRazrednika(Razrednik& razrednik);
+	string getNazivRazreda();
+	int getBrojUcenika();
+	int getIdRazrednika();
+	void ucitajUcenike();
+	vector<Roditelj>& getRoditelje();
+	vector<Ucenik>& getUcenici();	//
+	void ispisUcenika();
+	void ispisRoditelja();
+	void ispisInformacijaoRoditelju();       //
+	void pretragaUcenika(int id);    //
+	void ispisPodatakaORazredu();  
+	void unesiOcjenuUceniku();
+	void ispisOcjenaUcenika();
+	void operator++(int);  // uvecava broj ucenika za 1
+	~Razred() = default;
+};

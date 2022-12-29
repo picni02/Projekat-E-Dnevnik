@@ -1,0 +1,76 @@
+#include "Roditelj.h"
+#include <iostream>
+#include <string>
+using namespace std;
+
+Roditelj::Roditelj() {
+	string ime = "Novi";
+	string prezime = "Roditelj";
+	int godiste = 1970;
+	this->setId(1);
+	this->setIme(ime);
+	this->setPrezime(prezime);
+	this->setGodiste(godiste);
+	
+}
+
+void Roditelj::dodajDijete(Ucenik& dijete) {
+	cin >> dijete;
+	djeca.push_back(dijete);
+
+}
+
+vector<Ucenik>& Roditelj::getDjeca() {
+	return this->djeca;
+}
+
+int Roditelj::brojDjece() {
+	return this->djeca.size();
+}
+
+string Roditelj::idDjece() {
+	string ispis = "";
+	for (auto& d : this->djeca) {
+		ispis += d.getId() + " ";
+	}
+	return ispis;
+}
+
+istream& operator>>(istream& stream, Roditelj& roditelj) {
+	string ime, prezime;
+	unsigned int id;
+	cout << "Unesi ID: ";
+	cin >> id;
+	roditelj.setId(id);
+	roditelj.unosID();
+	cout << "Unesi ime: ";
+	getline(cin, ime);
+	roditelj.setIme(ime);
+	cout << "Unesi prezime: ";
+	getline(cin, prezime);
+	roditelj.setPrezime(prezime);
+	cout << "Godiste: ";
+	int pom;
+	do {
+		cout << "Godiste osobe: ";
+		cin >> pom;
+		if (pom < 1900 || pom > 2023) {
+			cout << "Unijeli ste pogresno godiste. Pokusajte ponovo!\n";
+		}
+
+	} while (pom < 1900 || pom > 2023);
+	cin >> pom;
+	roditelj.setGodiste(pom);
+
+	return stream;
+}
+
+ostream& operator<<(ostream& stream, Roditelj& roditelj) {
+	stream << "Ime i prezime roditelja: " << roditelj.getIme() << " " << roditelj.getPrezime() << endl;
+	stream << "Godiste roditelja: " << roditelj.getGodiste() << endl;
+	stream << "ID roditelja: " << roditelj.getId() << endl;
+	stream << "Broj djece: " << roditelj.brojDjece() << endl;
+	stream << "ID djece: " << roditelj.idDjece() << endl;
+
+	return stream;
+}

@@ -1,0 +1,40 @@
+#pragma once
+#include "Predmet.h"
+#include "Osoba.h"
+#include <iostream>
+#include <vector>
+
+using namespace std;
+
+enum Status{odlican, vrloDobar, dobar, dovoljan, nedovoljan};
+
+class Ucenik : public Osoba {
+private:
+	string razred;
+	vector<Predmet> ocjene;
+	string imeRoditelja;
+	Status status;
+public:
+	Ucenik();
+	Ucenik(const Ucenik& ucenik);
+	//static void setId(int id);
+	//static int getId();
+	//void setIme(char ime[30]);
+	//void setPrezime(char prezime[30]);
+	void setRazred(string razred);
+	void setOcjena();
+	void setImeRoditelja(string imeRoditelja);
+	//char* getIme();
+	//char* getPrezime();
+	string getRazred();
+	vector<Predmet>& getOcjene();
+	string getImeRoditelja();
+	void promijeniStatus();
+	string getStatus();
+	friend istream& operator>>(istream& stream, Ucenik& ucenik);
+	friend ostream& operator<<(ostream& stream, Ucenik& ucenik);
+	//void operator++(); // uvecava id ucenika za 1 od prethodno unesenog
+	void setStatus(string status);
+	void unosUcenika();
+	~Ucenik() = default;
+};

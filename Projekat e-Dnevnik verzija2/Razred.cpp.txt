@@ -1,0 +1,261 @@
+#include "Razred.h"
+#include <iostream>
+#include <fstream>
+#include <string>
+#include <iomanip>
+using namespace std;
+
+int Razred::brojUcenika = 0;
+
+Razred::Razred() {
+	this->nazivRazreda = "Ia";
+	this->razrednik = Razrednik::Razrednik();
+	this->idRazrednika = 1;
+	this->kapacitetRazreda = 24;
+}
+
+void Razred::setNazivRazreda(string nazivRazreda) {
+	this->nazivRazreda = nazivRazreda;
+}
+
+void Razred::setKapacitetRazreda(int brojUcenika) {
+	this->kapacitetRazreda = brojUcenika;
+}
+
+void Razred::setIdRazrednika() {
+	this->idRazrednika = this->razrednik.getId();
+}
+
+void Razred::dodajUcenikauRazred(Ucenik& ucenik) {
+	ucenici.push_back(ucenik);
+	ofstream unos(this->pomNazivRazreda, ios::app);
+	unos << "ID: " << ucenik.getId() << endl;
+	unos << "Ime i prezime: " << ucenik.getIme() << " " << ucenik.getPrezime() << endl;
+	unos << "Razred: " << ucenik.getRazred() << endl;
+	unos << "Status: " << ucenik.getStatus() << endl;
+	unos.close();
+	cout << "Ucenik ID-a " << ucenik.getId() << " je uspjesno dodan u razred " << this->nazivRazreda << ".\n";
+}
+
+void Razred::dodajRoditelja(Roditelj& roditelj) {
+	roditelji.push_back(roditelj);
+	ofstream unos("roditelji.txt", ios::app);
+	unos << "ID: " << roditelj.getId() << endl;
+	unos << "Ime i prezime: " << roditelj.getIme() << " " << roditelj.getPrezime() << endl;
+	unos << "Godiste: " << roditelj.getGodiste() << endl;
+	unos << "Broj djece: " << roditelj.brojDjece() << endl;
+	unos << "ID djece: " << roditelj.idDjece() << endl;
+	unos.close();
+	cout << "Roditelj " << roditelj.getIme() << " " << roditelj.getPrezime() << " je uspjeno dodan!\n";
+}
+
+void Razred::ispisRazreda() {
+	int br = 1;
+	/*if (this->ucenici.empty() == true) {
+		this->ucenici = this->ucitajUcenike(this->pomNazivRazreda);
+	}*/
+	cout << setw(10) << "R br" << setw(30) << "Ime i prezime" << setw(20) << "Razred" << setw(20) << "Status" << endl;
+	for (auto& r : this->ucenici) {
+		cout << setw(10) << br << setw(30) << r.getIme() << " " << r.getPrezime() << setw(20) << r.getRazred() << setw(20) << r.getStatus() << endl;
+		br++;
+	}
+}
+
+void Razred::izbrisiUcenikaIzRazreda() {
+	this->ispisRazreda();
+	int odabir;
+	cout << "Odabir: ";
+	do {
+		cin >> odabir;
+	} while (odabir < 1 || odabir > this->ucenici.size());
+	for (int i = 0; i < this->ucenici.size(); i++) {
+		if (odabir == i) {
+			this->ucenici.erase(this->ucenici.begin() + i - 1);
+		}
+	}
+}
+
+void Razred::setRazrednika(Razrednik& razrednik) {
+	this->razrednik = razrednik;
+}
+
+string Razred::getNazivRazreda() {
+	return this->nazivRazreda;
+}
+
+int Razred::getBrojUcenika() {
+	return this->brojUcenika;
+}
+
+int Razred::getIdRazrednika() {
+	return this->idRazrednika;
+}
+
+void Razred::ucitajUcenike() {
+	string provjera, tekst, tekst1;
+	
+	Ucenik temp;
+	vector<Ucenik> ucenici;
+	ifstream ispis(this->pomNazivRazreda);
+	if (!ispis) {
+		cout << "[GRESKA] Datoteka se ne moze otvoriti!\n";
+	}
+	while (ispis.eof()) {
+		ispis >> provjera;
+		if (provjera == "ID:") {
+			ispis >> provjera;
+			temp.setId(stoi(provjera));
+		}
+		if (provjera == "Ime i prezime ucenika:") {
+			tekst = "";
+			tekst1 = "";
+			do {
+				ispis >> provjera;
+				if (provjera != " ") {
+					tekst += provjera;
+				}
+				else if (provjera != "Razred:") {
+					tekst1 += provjera;
+				}
+			} while (provjera != "Razred:");
+
+			temp.setIme(tekst);
+			temp.setPrezime(tekst1);
+		}
+			if (provjera == "Razred:") {
+				ispis >> provjera;
+				temp.setRazred(provjera);
+			}
+			if (provjera == "Status:") {
+				ispis >> provjera;
+				temp.setStatus(provjera);
+			}
+
+			ucenici.push_back(temp);
+	}
+	this->ucenici = ucenici;
+}
+
+
+
+vector<Roditelj>& Razred::getRoditelje() {
+	return this->roditelji;
+}
+
+vector<Ucenik>& Razred::getUcenici() {
+	return this->ucenici;
+}
+
+void Razred::ispisUcenika() {
+	int br = 1;
+	cout << "R.br\t" << "\tIme i prezime\t\tRazred\t\tStatus\t\tIme roditelja" << endl;
+	for (auto& i : this->ucenici) {
+		cout << br << "\t\t" << i.getIme() << " " << i.getPrezime() << "\t\t" << i.getRazred() << "\t\t" << i.getStatus() << "\t\t" << i.getImeRoditelja() << endl;
+	}
+}
+
+void Razred::ispisRoditelja() {
+	int br = 1;
+	cout << "Ispis svih roditelja cija djeca idu u razred " << this->nazivRazreda << ":\n\n";
+	cout << "R. br" << "\t\tIme i prezime\t\tGodiste\n";
+	for (auto& r : this->roditelji) {
+		cout << br << "\t" << r.getIme() << " " << r.getPrezime() << "  -  " << r.getGodiste() << endl;
+	}
+}
+
+void Razred::ispisInformacijaoRoditelju() {
+	int pom, br = 0;
+	vector<Roditelj> rod;
+	cout << "--------------------------------------------------------\n";
+	this->ispisRazreda();
+	cout << "--------------------------------------------------------\n";
+	cout << "Odaberite redni broj ucenika za pregled informacija o roditelju: ";
+	cin >> pom;
+	
+
+	for (auto& i : this->roditelji) {
+		for (auto& j : this->ucenici) {
+			
+			if (br == pom) {
+				vector<Ucenik> djeca = i.getDjeca();
+				for (auto& k : djeca) {
+					if (k.getId() == j.getId()) {
+						rod.push_back(i);
+					}
+				}
+			}
+			br++;
+		}
+	}
+
+	for (auto& r : rod) {
+		cout << r << endl;
+	}
+}
+
+void Razred::pretragaUcenika(int id) {
+	shared_ptr<Razred> ucenik = make_shared<Razred>();
+	for (auto& i : this->ucenici) {
+		if (i.getId() == id) {
+			ucenik->getUcenici().push_back(i);
+		}
+	}
+
+	if (ucenik->getUcenici().size() == 0) {
+		throw "Nema ucenika pod tim ID-om!\n";
+	}
+	else {
+		ucenik->ispisRazreda();
+	}
+}
+
+void Razred::unesiOcjenuUceniku() {
+	this->ispisRazreda();
+	int br = 0;
+	auto pom = make_shared<int>();
+	shared_ptr<Razred> ucenik = make_shared<Razred>();
+	cout << "Odaberi redni broj ucenika za pregled ocjena: ";
+	cin >> *pom;
+	for (auto& i : this->ucenici) {
+		if (br == *pom) {
+			i.setOcjena();
+		}
+		br++;
+	}
+}
+
+void Razred::ispisOcjenaUcenika() {
+	this->ispisRazreda();
+	int br = 0;
+	auto pom = make_shared<int>();
+	shared_ptr<Razred> ucenik = make_shared<Razred>();
+	cout << "Odaberi redni broj ucenika za pregled ocjena: ";
+	cin >> *pom;
+	for (auto& i : this->ucenici) {
+		if (br == *pom) {
+			ucenik->getUcenici().push_back(i);
+		}
+		br++;
+	}
+	system("cls");
+	
+	for (auto& i : ucenik->getUcenici()) {
+		cout << i;
+		
+	}
+}
+
+void Razred::ispisPodatakaORazredu() {
+	cout << "-----------------------------------------------------------------\n";
+	cout << "--------------------ISPIS PODATAKA O RAZREDU---------------------\n";
+	cout << "-----------------------------------------------------------------\n";
+	cout <<"Razred: " << this->getNazivRazreda() << endl;
+	cout << "Broj ucenika: " << this->getBrojUcenika() << endl;
+	cout << "Razrednik: " << this->razrednik.getIme()<<" "<<this->razrednik.getPrezime() << endl;
+	this->ispisRazreda();
+	cout << "-----------------------------------------------------------------\n";
+}
+
+void Razred::operator++(int) {
+	this->brojUcenika += 1;
+}

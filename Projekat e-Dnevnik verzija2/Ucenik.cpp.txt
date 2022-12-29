@@ -1,0 +1,209 @@
+#include "Ucenik.h"
+#include <iostream>
+#include <fstream>
+#include <string>
+#include <stdio.h>
+
+using namespace std;
+
+
+/*void Ucenik::setId(int id) {
+	Ucenik::id = id;
+}
+int Ucenik::getId() {
+	return Ucenik::id;
+}*/
+
+Ucenik::Ucenik() {
+	Osoba(1, "Novi", "Ucenik", 2000);
+	this->razred = "1a";
+	this->status = Status::odlican;
+}
+
+Ucenik::Ucenik(const Ucenik& ucenik) {
+	Osoba(1, "Novi", "Ucenik", 2000);
+	this->razred = ucenik.razred;
+	this->status = ucenik.status;
+	this->ocjene = ucenik.ocjene;
+}
+
+/*void Ucenik::setIme(char ime[30]) {
+	// cout << "Unesi ime ucenika: ";
+	// cin.getline(this->ime, 30);
+	strcpy_s(this->ime, ime);
+}
+
+void Ucenik::setPrezime(char prezime[30]) {
+	//cout << "Unesi prezime ucenika: ";
+	//cin.getline(this->prezime, 30);
+	strcpy_s(this->prezime, prezime);
+}
+*/
+void Ucenik::setRazred(string razred) {
+	// cout << "Unesi razred ucenika: ";
+	// cin.getline(this->razred, 20);
+	this->razred = razred;
+}
+
+void Ucenik::setOcjena() {
+	Predmet ocjena;
+	ocjena.setNazivPredmeta();
+	ocjena.setOcjena();
+
+	ocjene.push_back(ocjena);
+}
+
+void Ucenik::setImeRoditelja(string imeRoditelja) {
+	this->imeRoditelja = imeRoditelja;
+}
+
+void Ucenik::setStatus(string status) {
+	if (status.compare("Odlican") == 0) {
+		this->status = Status::odlican;
+	}
+	else if (status.compare("Vrlo dobar") == 0) {
+		this->status = Status::vrloDobar;
+	}
+	else if (status.compare("Dobar") == 0) {
+		this->status = Status::dobar;
+	}
+	else if (status.compare("Dovoljan") == 0) {
+		this->status = Status::dovoljan;
+	}
+	else if (status.compare("Nedovoljan") == 0) {
+		this->status = Status::nedovoljan;
+	}
+}
+
+/*char* Ucenik::getIme() {
+	return this->ime;
+}
+
+char* Ucenik::getPrezime() {
+	return this->prezime;
+}
+*/
+string Ucenik::getRazred() {
+	return this->razred;
+}
+
+vector<Predmet>& Ucenik::getOcjene() {
+	return this->ocjene;
+}
+
+string Ucenik::getImeRoditelja() {
+	return this->imeRoditelja;
+}
+
+void Ucenik::promijeniStatus() {
+	int odabir;
+	cout << "Status:\n\t1. odlican\n\t2.vrlo dobar\n\t 3. dobar\n\t4. dovoljan\n\t5. nedovoljan\nOdabir:";
+	
+	do {
+		cin >> odabir;
+	} while (odabir < 1 || odabir > 5);
+
+	if (odabir == 1) {
+		this->status = Status::odlican;
+		cout << "Status ucenika je promijenjen sa " << this->getStatus() << " na odlican!\n";
+	}
+	else if (odabir == 2) {
+		this->status = Status::vrloDobar;
+		cout << "Status ucenika je promijenjen sa " << this->getStatus() << " na vrlo dobar!\n";
+	}
+	else if (odabir == 3) {
+		this->status = Status::dobar;
+		cout << "Status ucenika je promijenjen sa " << this->getStatus() << " na dobar!\n";
+	}
+	else if (odabir == 4) {
+		this->status = Status::dovoljan;
+		cout << "Status ucenika je promijenjen sa " << this->getStatus() << " na dovoljan!\n";
+	}
+	else if (odabir == 5) {
+		this->status = Status::nedovoljan;
+		cout << "Status ucenika je promijenjen sa " << this->getStatus() << " na nedovoljan!\n";
+	}
+	else {
+		cout << "Pogresan odabir!\n";
+	}
+
+}
+
+string Ucenik::getStatus() {
+	if (this->status == Status::odlican) {
+		return "Odlican";
+	}
+	else if (this->status == Status::vrloDobar) {
+		return "Vrlo dobar";
+	}
+	else if (this->status == Status::dobar) {
+		return "Dobar";
+	}
+	else if (this->status == Status::dovoljan) {
+		return "Dovoljan";
+	}
+	else if (this->status == Status::nedovoljan) {
+		return "Nedovoljan";
+	}
+}
+
+void Ucenik::unosUcenika() {
+	ofstream datoteka("ucenici.txt", ios::app);
+	//ofstream datoteka1("id.txt", ios::app);
+	datoteka << "ID: " << this->getId() << endl;
+	//datoteka1 << this->getId() << endl;
+	datoteka << "Ime i prezime ucenika: " << this->getIme() << " " << this->getPrezime() << endl;
+	datoteka << "Razred: " << this->getRazred() << endl;
+	datoteka << "Status: " << this->getStatus() << endl;
+	datoteka.close();
+	//datoteka1.close();
+}
+
+istream& operator>>(istream& stream, Ucenik& ucenik) {
+	string ime, prezime, razred;
+	unsigned int id;
+	cout << "Unesi ID ucenika: ";
+	cin >> id;
+	ucenik.setId(id);
+	ucenik.unosID();
+	cin.ignore();
+	cout << "Unesi ime: ";
+	ucenik.setIme(ime);
+	cin.ignore();
+	system("pause");
+	cout << "Unesi prezime: ";
+	ucenik.setPrezime(prezime);
+	cin.ignore();
+	system("pause");
+	int pom;
+	do {
+		cout << "Godiste osobe: ";
+		cin >> pom;
+		if (pom < 1900 || pom > 2023) {
+			cout << "Unijeli ste pogresno godiste. Pokusajte ponovo!\n";
+		}
+
+	} while (pom < 1900 || pom > 2023);
+	ucenik.setGodiste(pom);
+	
+	cout << "Unesi razred: ";
+	ucenik.setRazred(razred);
+	
+	ucenik.promijeniStatus();
+	ucenik.unosUcenika();
+	return stream;
+}
+
+ostream& operator<<(ostream& stream, Ucenik& ucenik) {
+	stream << "Ime ucenika: " << ucenik.getIme() << endl;
+	stream << "Prezime ucenika: " << ucenik.getPrezime() << endl;
+	stream << "Godiste ucenik: " << ucenik.getGodiste() << endl;
+	stream << "ID ucenika: " << ucenik.getId() << endl;
+	stream << "Razred: " << ucenik.getRazred() << endl;
+	stream << "Status ucenika: " << ucenik.getStatus() << endl;
+	stream << "Predmet:\tOcjena\n";
+	for (auto& i : ucenik.getOcjene()) {
+		stream << i.getNazivPredmeta() << ": " << i.getOcjena() << endl;
+	}
+	return stream;
+}

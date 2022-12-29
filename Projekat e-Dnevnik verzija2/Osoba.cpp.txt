@@ -1,0 +1,128 @@
+#include "Osoba.h"
+#include <iostream>
+#include <fstream>
+#include <vector>
+#include <stdio.h>
+#include <string>
+using namespace std;
+
+void Osoba::setId(unsigned int id) {
+	bool provjera = this->postojiID(id);
+	do {
+		if (provjera) {
+			throw "Uneseni ID vec postoji!\n";
+		}
+		else {
+			ofstream unos("id.txt", ios::app);
+			this->id = id;
+			unos << id << endl;
+			unos.close();
+		}
+	} while (provjera == true);
+}
+
+bool Osoba::postojiID(unsigned int id) {
+	vector<int> vectorID;
+	bool pom = false;
+	string provjera;
+	ifstream ispis("id.txt");
+	if (!ispis) {
+		cout << "[GRESKA] Datoteka se ne moze otvoriti!\n";
+	}
+	while(ispis.eof()){
+		ispis >> provjera;
+		if (provjera != " ") {
+			vectorID.push_back(stoi(provjera));
+		}
+	}
+	for (int i = 0; i < vectorID.size(); i++) {
+		if (vectorID[i] == id) {
+			pom = true;
+			break;
+		}
+	}
+	return pom;
+}
+
+Osoba::Osoba(unsigned int id, string ime, string prezime, int godiste) {
+	this->setId(id);
+	this->setIme(ime);
+	this->setPrezime(prezime);
+	this->setGodiste(godiste);
+	
+}
+
+Osoba::Osoba() : Osoba(1, "Nova", "Osoba", 2000) {}
+Osoba::Osoba(unsigned int id, string ime, string prezime) : Osoba(id, ime, prezime, 2000) {}
+//Osoba::Osoba(unsigned int id, string ime, string prezime, int godiste) : Osoba(1, ime, prezime, godiste){}
+
+void Osoba::setIme(string ime) {
+	this->ime = ime;
+}
+
+void Osoba::setPrezime(string prezime) {
+	this->prezime = prezime;
+
+}
+
+void Osoba::setGodiste(int godiste) {
+	this->godiste = godiste;
+}
+
+string Osoba::getIme() {
+	return this->ime;
+}
+string Osoba::getPrezime() {
+	return this->prezime;
+}
+int Osoba::getGodiste() {
+	return this->godiste;
+}
+
+int Osoba::getId() {
+	return this->id;
+}
+
+void Osoba::unosID() {
+	ofstream datoteka("id.txt", ios::app);
+	datoteka << this->id << endl;
+	datoteka.close();
+}
+
+/*istream& operator>>(istream& stream, Osoba& osoba) {
+	string ime, prezime;
+	unsigned int id;
+	cout << "Unesi ID: ";
+	cin >> id;
+	osoba.setId(id);
+	osoba.unosID();
+	cin.ignore();
+	cout << "Unesi ime: ";
+	osoba.setIme(ime);
+	cin.ignore();
+	cout << "Unesi prezime: ";
+	osoba.setPrezime(prezime);
+	int pom;
+	cin.ignore();
+	do {
+		cout << "Godiste osobe: ";
+		cin >> pom;
+		if (pom < 1900 || pom > 2023) {
+			throw "Unijeli ste pogresno godiste. Pokusajte ponovo!\n";
+		}
+
+	} while (pom < 1900 || pom > 2023);
+	osoba.setGodiste(pom);
+	
+	return stream;
+}
+
+ostream& operator<<(ostream& stream, Osoba& osoba) {
+	stream << "ID: " << osoba.getId() << endl;
+	stream << "Ime: " << osoba.getIme() << endl;
+	stream << "Prezime: " << osoba.getPrezime() << endl;
+	stream << "Godiste: " << osoba.getGodiste() << endl;
+	
+	return stream;
+}
+*/

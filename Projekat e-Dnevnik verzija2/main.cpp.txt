@@ -1,0 +1,152 @@
+#include <iostream>
+#include "Razred.h"
+#include "Roditelj.h"
+#include "Ucenik.h"
+#include "Razrednik.h"
+#include <fstream>
+
+using namespace std;
+
+Razrednik razrednik;
+Ucenik ucenik;
+Roditelj roditelj;
+string naziv;
+
+int glavniMeni() {
+	int odabir;
+	system("cls");
+	cout << "---------------------------------\n";
+	cout << "---------------MENI--------------\n";
+	cout << "---------------------------------\n";
+	cout << "\t1. Unos ucenika u razred\n";
+	cout << "\t2. Dodaj roditelja\n";
+	cout << "\t3. Ispis ocjena ucenika\n";
+	cout << "\t4. Ispis razreda\n";
+	cout << "\t5. Ispis razrednika\n";
+	cout << "\t6. Ispis svih roditelja\n";
+	cout << "\t7. Brisanje ucenika\n";
+	cout << "\t8. Pretraga ucenika\n";
+	cout << "\t9. Postavi razrednika\n";
+	cout << "\t0. EXIT\n";
+	cout << "Odabir: ";
+	cin >> odabir;
+	cin.ignore();
+
+	return odabir;
+}
+
+void raz(Razred& razred) {
+	int odabir2, id;
+	do
+	{
+		odabir2 = glavniMeni();
+		system("cls");
+		switch (odabir2)
+		{
+		case 1:
+			cin >> ucenik;
+			razred.dodajUcenikauRazred(ucenik);
+			razred++;
+			system("pause");
+			break;
+		case 2:
+			cin >> roditelj;
+			razred.dodajRoditelja(roditelj);
+			system("pause");
+			break;
+		case 3:
+			razred.unesiOcjenuUceniku();
+			system("pause");
+			break;
+		case 4:
+			razred.ispisPodatakaORazredu();
+			system("pause");
+			break;
+		case 5:
+			cout << razrednik;
+			system("pause");
+			break;
+		case 6:
+			razred.ispisRoditelja();
+			system("pause");
+			break;
+		case 7:
+			razred.izbrisiUcenikaIzRazreda();
+			system("pause");
+			break;
+		case 8:
+			cout << "Unesi ID ucenika kojeg zelite pretraziti: ";
+			cin >> id;
+			razred.pretragaUcenika(id);
+			system("pause");
+			break;
+		case 9:
+			cin >> razrednik;
+			razrednik.setRazred(razred.getNazivRazreda());
+			razred.setRazrednika(razrednik);
+			ofstream unos("razrednik.txt", ios::app);
+			unos << "Razred: " << razrednik.getRazred() << endl;
+			unos << "Ime: " << razrednik.getIme() << endl;
+			unos << "Prezime: " << razrednik.getPrezime() << endl;
+			unos << "ID: " << razrednik.getId() << endl;
+			unos << "Godiste: " << razrednik.getGodiste() << endl;
+			unos << "Spol" << razrednik.getSpol() << endl;
+			unos << "------------------------------------------" << endl;
+			unos.close();
+			system("pause");
+			break;
+		case 0:
+			cout << "Dovidjena! :)\n";
+			break;
+		default:
+			cout << "ERROR 404\n";
+			break;
+		}
+		cout << "---------------------------------\n";
+	} while (odabir2 != 0);
+}
+
+
+int main() {
+	Razred razred;
+	string nazivRazreda;
+	int brojUcenika, odabir;
+	try
+	{
+		cout << "Dobrodosli u aplikaciju E-dnevnik!\n";
+		cin.ignore();
+		system("cls");
+
+		cout << "Unesite naziv razreda: ";
+		getline(cin, nazivRazreda);
+		ifstream ispis(nazivRazreda);
+		if(ispis){
+			cout<< "Taj razred je vec kreiran! Pritisnite ENTER za nastavak!\n";
+			system("pause");
+			cin.ignore();
+			system("cls");
+			razred.ucitajUcenike();
+			raz(razred);
+		}
+		else {
+			ofstream unos(nazivRazreda, ios::app);
+			razred.setNazivRazreda(nazivRazreda);
+			cout << "Broj ucenika: ";
+			cin >> brojUcenika;
+			razred.setKapacitetRazreda(brojUcenika);
+			unos << "Broj ucenika: " << brojUcenika << endl;
+			unos.close();
+			cout << "Kreiran je razred pod nazivom " << nazivRazreda << "!\n";
+
+			raz(razred);
+
+		}
+		
+	}
+	catch (const char* GRESKA)
+	{
+		cout << "[GRESKA] " << GRESKA << endl;
+	}
+
+	return 0;
+}
